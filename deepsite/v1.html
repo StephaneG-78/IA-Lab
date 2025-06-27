@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="fr" class="light">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concertation Publique</title>
+    <meta name="description" content="Plateforme de concertation publique en ligne">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                    },
+                    backdropBlur: {
+                        'glass': '8px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .dark .glass-effect {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(14, 165, 233, 0.5);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.3);
+        }
+        
+        .required:after {
+            content: " *";
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 glass-effect shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+                Concertation Publique
+            </h1>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:inline"></i>
+                </button>
+                <button id="admin-login-btn" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fas fa-lock mr-2"></i>Espace Admin
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <section class="mb-12 text-center">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Participez à la concertation</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">Votre avis compte ! Posez vos questions ou partagez vos contributions pour participer à la concertation publique.</p>
+                <button id="show-form-btn" class="btn-primary text-white font-medium px-6 py-3 rounded-lg">
+                    <i class="fas fa-plus mr-2"></i>Participer
+                </button>
+            </div>
+        </section>
+
+        <!-- Participation Form (Hidden by default) -->
+        <section id="participation-form" class="hidden mb-12 fade-in">
+            <div class="max-w-2xl mx-auto glass-effect rounded-xl p-6 shadow-lg">
+                <h3 class="text-2xl font-semibold mb-6">Formulaire de participation</h3>
+                <form id="contribution-form" class="space-y-4">
+                    <div>
+                        <label for="pseudo" class="block mb-2 font-medium required">Pseudo</label>
+                        <input type="text" id="pseudo" name="pseudo" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800">
+                    </div>
+                    
+                    <div>
+                        <label for="ville" class="block mb-2 font-medium required">Ville</label>
+                        <input type="text" id="ville" name="ville" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800">
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-medium required">Vous souhaitez poster une :</label>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="type" value="question" required class="form-radio text-primary-600 focus:ring-primary-500" checked>
+                                <span class="ml-2">Question</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="type" value="contribution" class="form-radio text-primary-600 focus:ring-primary-500">
+                                <span class="ml-2">Contribution</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="titre" class="block mb-2 font-medium required">Titre de votre message</label>
+                        <input type="text" id="titre" name="titre" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800">
+                    </div>
+                    
+                    <div>
+                        <label for="message" class="block mb-2 font-medium required">Votre message</label>
+                        <textarea id="message" name="message" rows="5" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="fichier" class="block mb-2 font-medium">Joindre un fichier PDF (optionnel, max 10 Mo)</label>
+                        <div class="flex items-center">
+                            <input type="file" id="fichier" name="fichier" accept=".pdf" class="hidden">
+                            <label for="fichier" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                                <i class="fas fa-file-pdf mr-2 text-red-500"></i>Choisir un fichier
+                            </label>
+                            <span id="file-name" class="ml-3 text-sm text-gray-500 dark:text-gray-400">Aucun fichier sélectionné</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="btn-primary text-white font-medium px-6 py-3 rounded-lg w-full">
+                            <i class="fas fa-check mr-2"></i>Valider ma participation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Thank You Message (Hidden by default) -->
+        <section id="thank-you" class="hidden mb-12 text-center fade-in">
+            <div class="max-w-2xl mx-auto glass-effect rounded-xl p-8 shadow-lg">
+                <div class="text-green-500 text-5xl mb-4">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="text-2xl font-semibold mb-4">Merci pour votre participation !</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-6">Votre contribution a bien été enregistrée et sera examinée par nos équipes avant publication.</p>
+                <button id="back-to-list" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Retour à la liste
+                </button>
+            </div>
+        </section>
+
+        <!-- Contributions List -->
+        <section id="contributions-list" class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Toutes les participations</h2>
+                <div class="flex space-x-2">
+                    <select id="filter-type" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800">
+                        <option value="all">Toutes les publications</option>
+                        <option value="question">Uniquement les Questions</option>
+                        <option value="contribution">Uniquement les Contributions</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="contributions-container" class="space-y-6">
+                <!-- Contributions will be loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 dark:bg-gray-800 py-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center text-gray-600 dark:text-gray-300">
+                <p>© 2023 Concertation Publique. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 fade-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Connexion administrateur</h3>
+                <button id="close-admin-modal" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="admin-login-form" class="space-y-4">
+                <div>
+                    <label for="admin-username" class="block mb-2 font-medium">Identifiant</label>
+                    <input type="text" id="admin-username" name="username" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800">
+                </div>
+                <div>
+                    <label for="admin-password" class="block mb-2 font-medium">Mot de passe</label>
+                    <input type="password" id="admin-password" name="password" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800">
+                </div>
+                <button type="submit" class="w-full btn-primary text-white font-medium px-6 py-3 rounded-lg">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Se connecter
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel (Hidden by default) -->
+    <div id="admin-panel" class="fixed inset-0 z-50 hidden bg-white dark:bg-gray-900 overflow-y-auto">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold">Panneau d'administration</h2>
+                <div class="flex space-x-4">
+                    <button id="export-csv" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-file-export mr-2"></i>Exporter en CSV
+                    </button>
+                    <button id="logout-admin" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-4">Filtres</h3>
+                <div class="flex flex-wrap gap-4">
+                    <select id="admin-filter-type" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800">
+                        <option value="all">Toutes les publications</option>
+                        <option value="question">Questions</option>
+                        <option value="contribution">Contributions</option>
+                    </select>
+                    <select id="admin-filter-status" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800">
+                        <option value="all">Tous les statuts</option>
+                        <option value="en-attente">En attente</option>
+                        <option value="publiee">Publiée</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="admin-contributions-container" class="space-y-6">
+                <!-- Admin contributions will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let contributions = JSON.parse(localStorage.getItem('contributions')) || [];
+        let adminLoggedIn = false;
+        
+        // DOM Elements
+        const showFormBtn = document.getElementById('show-form-btn');
+        const participationForm = document.getElementById('participation-form');
+        const contributionForm = document.getElementById('contribution-form');
+        const thankYouSection = document.getElementById('thank-you');
+        const backToListBtn = document.getElementById('back-to-list');
+        const contributionsContainer = document.getElementById('contributions-container');
+        const filterType = document.getElementById('filter-type');
+        const fileInput = document.getElementById('fichier');
+        const fileName = document.getElementById('file-name');
+        const themeToggle = document.getElementById('theme-toggle');
+        const adminLoginBtn = document.getElementById('admin-login-btn');
+        const adminModal = document.getElementById('admin-modal');
+        const closeAdminModal = document.getElementById('close-admin-modal');
+        const adminLoginForm = document.getElementById('admin-login-form');
+        const adminPanel = document.getElementById('admin-panel');
+        const logoutAdmin = document.getElementById('logout-admin');
+        const exportCsv = document.getElementById('export-csv');
+        const adminContributionsContainer = document.getElementById('admin-contributions-container');
+        const adminFilterType = document.getElementById('admin-filter-type');
+        const adminFilterStatus = document.getElementById('admin-filter-status');
+        
+        // Event Listeners
+        showFormBtn.addEventListener('click', () => {
+            participationForm.classList.remove('hidden');
+            thankYouSection.classList.add('hidden');
+            showFormBtn.classList.add('hidden');
+            window.scrollTo({
+                top: participationForm.offsetTop - 20,
+                behavior: 'smooth'
+            });
+        });
+        
+        backToListBtn.addEventListener('click', () => {
+            participationForm.classList.add('hidden');
+            thankYouSection.classList.add('hidden');
+            showFormBtn.classList.remove('hidden');
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('Le fichier ne doit pas dépasser 10 Mo');
+                    e.target.value = '';
+                    fileName.textContent = 'Aucun fichier sélectionné';
+                } else if (file.type !== 'application/pdf') {
+                    alert('Seuls les fichiers PDF sont acceptés');
+                    e.target.value = '';
+                    fileName.textContent = 'Aucun fichier sélectionné';
+                } else {
+                    fileName.textContent = file.name;
+                }
+            } else {
+                fileName.textContent = 'Aucun fichier sélectionné';
+            }
+        });
+        
+        contributionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const contribution = {
+                id: Date.now(),
+                pseudo: formData.get('pseudo'),
+                ville: formData.get('ville'),
+                type: formData.get('type'),
+                titre: formData.get('titre'),
+                message: formData.get('message'),
+                fichier: fileInput.files[0] ? fileInput.files[0].name : null,
+                date: new Date().toISOString(),
+                statut: 'en-attente',
+                reponse: null
+            };
+            
+            // In a real app, you would upload the file to a server
+            // Here we just store the file name
+            contributions.push(contribution);
+            localStorage.setItem('contributions', JSON.stringify(contributions));
+            
+            // Reset form
+            e.target.reset();
+            fileName.textContent = 'Aucun fichier sélectionné';
+            
+            // Show thank you message
+            participationForm.classList.add('hidden');
+            thankYouSection.classList.remove('hidden');
+            
+            // Refresh contributions list if admin is logged in
+            if (adminLoggedIn) {
+                renderAdminContributions();
+            }
+        });
+        
+        filterType.addEventListener('change', renderContributions);
+        
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+        
+        adminLoginBtn.addEventListener('click', () => {
+            adminModal.classList.remove('hidden');
+        });
+        
+        closeAdminModal.addEventListener('click', () => {
+            adminModal.classList.add('hidden');
+        });
+        
+        adminLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            
+            if (username === 'MO' && password === 'tmp123') {
+                adminLoggedIn = true;
+                adminModal.classList.add('hidden');
+                adminPanel.classList.remove('hidden');
+                renderAdminContributions();
+            } else {
+                alert('Identifiants incorrects');
+            }
+        });
+        
+        logoutAdmin.addEventListener('click', () => {
+            adminLoggedIn = false;
+            adminPanel.classList.add('hidden');
+        });
+        
+        exportCsv.addEventListener('click', () => {
+            exportToCsv();
+        });
+        
+        adminFilterType.addEventListener('change', renderAdminContributions);
+        adminFilterStatus.addEventListener('change', renderAdminContributions);
+        
+        // Functions
+        function renderContributions() {
+            const typeFilter = filterType.value;
+            let filteredContributions = contributions.filter(c => c.statut === 'publiee');
+            
+            if (typeFilter !== 'all') {
+                filteredContributions = filteredContributions.filter(c => c.type === typeFilter);
+            }
+            
+            // Sort by date (newest first)
+            filteredContributions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            contributionsContainer.innerHTML = '';
+            
+            if (filteredContributions.length === 0) {
+                contributionsContainer.innerHTML = `
+                    <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-inbox text-4xl mb-4"></i>
+                        <p>Aucune participation disponible pour le moment.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredContributions.forEach(contribution => {
+                const contributionElement = document.createElement('div');
+                contributionElement.className = 'glass-effect rounded-xl p-6 shadow-sm';
+                contributionElement.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full ${contribution.type === 'question' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'}">
+                                ${contribution.type === 'question' ? 'Question' : 'Contribution'}
+                            </span>
+                            <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">${formatDate(contribution.date)}</span>
+                        </div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-user mr-1"></i>${contribution.pseudo} (${contribution.ville})
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">${contribution.titre}</h3>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">${contribution.message}</p>
+                    ${contribution.fichier ? `
+                        <div class="mt-4">
+                            <a href="#" class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:underline" onclick="downloadFile('${contribution.fichier}')">
+                                <i class="fas fa-file-pdf mr-2 text-red-500"></i>
+                                ${contribution.fichier}
+                            </a>
+                        </div>
+                    ` : ''}
+                    ${contribution.reponse ? `
+                        <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center mb-2">
+                                <div class="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    <i class="fas fa-reply mr-1"></i>Réponse
+                                </div>
+                                <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">${formatDate(contribution.reponse.date)}</span>
+                            </div>
+                            <p class="text-gray-700 dark:text-gray-300">${contribution.reponse.message}</p>
+                        </div>
+                    ` : ''}
+                `;
+                contributionsContainer.appendChild(contributionElement);
+            });
+        }
+        
+        function renderAdminContributions() {
+            const typeFilter = adminFilterType.value;
+            const statusFilter = adminFilterStatus.value;
+            
+            let filteredContributions = [...contributions];
+            
+            if (typeFilter !== 'all') {
+                filteredContributions = filteredContributions.filter(c => c.type === typeFilter);
+            }
+            
+            if (statusFilter !== 'all') {
+                filteredContributions = filteredContributions.filter(c => c.statut === statusFilter);
+            }
+            
+            // Sort by date (newest first)
+            filteredContributions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            adminContributionsContainer.innerHTML = '';
+            
+            if (filteredContributions.length === 0) {
+                adminContributionsContainer.innerHTML = `
+                    <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-inbox text-4xl mb-4"></i>
+                        <p>Aucune participation correspondant aux filtres.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredContributions.forEach(contribution => {
+                const contributionElement = document.createElement('div');
+                contributionElement.className = 'glass-effect rounded-xl p-6 shadow-sm mb-6';
+                contributionElement.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full ${contribution.type === 'question' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'}">
+                                ${contribution.type === 'question' ? 'Question' : 'Contribution'}
+                            </span>
+                            <span class="ml-2 text-sm ${contribution.statut === 'publiee' ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'}">
+                                <i class="fas fa-circle text-xs mr-1"></i>${contribution.statut === 'publiee' ? 'Publiée' : 'En attente'}
+                            </span>
+                            <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">${formatDate(contribution.date)}</span>
+                        </div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-user mr-1"></i>${contribution.pseudo} (${contribution.ville})
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">${contribution.titre}</h3>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">${contribution.message}</p>
+                    ${contribution.fichier ? `
+                        <div class="mt-4">
+                            <a href="#" class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:underline" onclick="downloadFile('${contribution.fichier}')">
+                                <i class="fas fa-file-pdf mr-2 text-red-500"></i>
+                                ${contribution.fichier}
+                            </a>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-medium">Réponse</h4>
+                            <div class="flex space-x-2">
+                                <select id="status-${contribution.id}" class="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800">
+                                    <option value="en-attente" ${contribution.statut === 'en-attente' ? 'selected' : ''}>En attente</option>
+                                    <option value="publiee" ${contribution.statut === 'publiee' ? 'selected' : ''}>Publiée</option>
+                                </select>
+                                <button onclick="deleteContribution(${contribution.id})" class="px-3 py-1 text-sm bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition-colors">
+                                    <i class="fas fa-trash mr-1"></i>Supprimer
+                                </button>
+                            </div>
+                        </div>
+                        
+                        ${contribution.reponse ? `
+                            <div class="mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                                <p class="text-gray-700 dark:text-gray-300 mb-2">${contribution.reponse.message}</p>
+                                <div class="text-right text-sm text-gray-500 dark:text-gray-400">${formatDate(contribution.reponse.date)}</div>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="mt-4">
+                            <textarea id="reponse-${contribution.id}" rows="3" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800" placeholder="Écrire une réponse...">${contribution.reponse ? contribution.reponse.message : ''}</textarea>
+                            <div class="mt-2 flex justify-end">
+                                <button onclick="saveResponse(${contribution.id})" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                                    <i class="fas fa-save mr-1"></i>Enregistrer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                adminContributionsContainer.appendChild(contributionElement);
+            });
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function downloadFile(filename) {
+            alert(`Environnement de démonstration : le fichier "${filename}" serait téléchargé dans une application réelle.`);
+        }
+        
+        function deleteContribution(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette participation ?')) {
+                contributions = contributions.filter(c => c.id !== id);
+                localStorage.setItem('contributions', JSON.stringify(contributions));
+                renderAdminContributions();
+                renderContributions();
+            }
+        }
+        
+        function saveResponse(id) {
+            const responseText = document.getElementById(`reponse-${id}`).value.trim();
+            const status = document.getElementById(`status-${id}`).value;
+            
+            const contributionIndex = contributions.findIndex(c => c.id === id);
+            if (contributionIndex !== -1) {
+                contributions[contributionIndex].statut = status;
+                
+                if (responseText) {
+                    contributions[contributionIndex].reponse = {
+                        message: responseText,
+                        date: new Date().toISOString()
+                    };
+                } else {
+                    contributions[contributionIndex].reponse = null;
+                }
+                
+                localStorage.setItem('contributions', JSON.stringify(contributions));
+                renderAdminContributions();
+                renderContributions();
+            }
+        }
+        
+        function exportToCsv() {
+            let csv = 'ID,Pseudo,Ville,Type,Titre,Message,Fichier,Date,Statut,Réponse,Date réponse\n';
+            
+            contributions.forEach(contribution => {
+                csv += `"${contribution.id}","${contribution.pseudo}","${contribution.ville}","${contribution.type}","${contribution.titre}","${contribution.message}","${contribution.fichier || ''}","${contribution.date}","${contribution.statut}","${contribution.reponse ? contribution.reponse.message : ''}","${contribution.reponse ? contribution.reponse.date : ''}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `export_concertation_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Initialize
+        function init() {
+            // Set theme from localStorage
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+            
+            renderContributions();
+        }
+        
+        // Make functions available globally for inline event handlers
+        window.downloadFile = downloadFile;
+        window.deleteContribution = deleteContribution;
+        window.saveResponse = saveResponse;
+        
+        // Run initialization
+        init();
+    </script>
+</body>
+</html>

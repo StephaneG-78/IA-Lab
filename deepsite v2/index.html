@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concertation Publique | Participation Citoyenne</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+                        display: ['Poppins', 'ui-sans-serif']
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .dark .glass-effect {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .btn-hover {
+            transition: all 0.3s ease;
+            background-size: 200% auto;
+            background-image: linear-gradient(45deg, #0ea5e9 0%, #a855f7 51%, #0ea5e9 100%);
+        }
+        
+        .btn-hover:hover {
+            background-position: right center;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+        
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #a855f7;
+        }
+        
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #a855f7;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 font-sans text-gray-800 dark:text-gray-200 transition-colors duration-200">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 glass-effect shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
+                    <i class="fas fa-comments text-white text-xl"></i>
+                </div>
+                <h1 class="text-xl font-display font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+                    Concertation Publique
+                </h1>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:block"></i>
+                </button>
+                
+                <button id="admin-login-btn" class="px-4 py-2 rounded-full bg-primary-500 hover:bg-primary-600 text-white font-medium transition-colors">
+                    <i class="fas fa-lock mr-2"></i>Espace modérateur
+                </button>
+                
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-sm">
+        <div class="absolute right-0 top-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg p-4 transform transition-transform duration-300 translate-x-full">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Menu</h2>
+                <button id="close-mobile-menu" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <nav class="space-y-4">
+                <a href="#participer" class="block px-4 py-2 rounded-lg bg-primary-50 dark:bg-gray-700 text-primary-600 dark:text-primary-400 font-medium">
+                    <i class="fas fa-pen-to-square mr-2"></i>Participer
+                </a>
+                <a href="#contributions" class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-comment-dots mr-2"></i>Voir les contributions
+                </a>
+                <a href="#faq" class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-circle-question mr-2"></i>FAQ
+                </a>
+            </nav>
+            
+            <div class="absolute bottom-4 left-4 right-4">
+                <button class="w-full px-4 py-2 rounded-full bg-primary-500 hover:bg-primary-600 text-white font-medium transition-colors">
+                    <i class="fas fa-lock mr-2"></i>Espace modérateur
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-400 to-secondary-500 opacity-20 dark:opacity-10"></div>
+        <div class="container mx-auto px-4 py-16 md:py-24 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl font-display font-bold mb-6 bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+                    Votre voix compte
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 text-gray-600 dark:text-gray-300">
+                    Participez à la concertation publique et contribuez à l'avenir de votre ville
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#participer" class="px-8 py-3 rounded-full btn-hover text-white font-semibold shadow-lg hover:shadow-xl transition-all">
+                        <i class="fas fa-pen-to-square mr-2"></i>Participer maintenant
+                    </a>
+                    <a href="#contributions" class="px-8 py-3 rounded-full bg-white dark:bg-gray-800 text-primary-600 dark:text-primary-400 font-semibold shadow-lg hover:shadow-xl transition-all">
+                        <i class="fas fa-comment-dots mr-2"></i>Voir les contributions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Participation Form -->
+    <section id="participer" class="container mx-auto px-4 py-12 md:py-16">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-primary-600 to-secondary-600 p-6">
+                    <h2 class="text-2xl font-display font-bold text-white">
+                        <i class="fas fa-pen-to-square mr-2"></i>Formulaire de participation
+                    </h2>
+                </div>
+                
+                <form id="participation-form" class="p-6 space-y-6">
+                    <div>
+                        <label for="pseudo" class="block text-sm font-medium mb-1">Pseudo *</label>
+                        <input type="text" id="pseudo" name="pseudo" required 
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition-all"
+                            placeholder="Votre pseudo public">
+                    </div>
+                    
+                    <div>
+                        <label for="ville" class="block text-sm font-medium mb-1">Ville *</label>
+                        <input type="text" id="ville" name="ville" required 
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition-all"
+                            placeholder="Votre ville">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Type de participation *</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <input type="radio" id="question" name="type" value="question" class="hidden peer" required checked>
+                                <label for="question" class="flex flex-col items-center p-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-gray-700 cursor-pointer transition-all">
+                                    <i class="fas fa-question-circle text-3xl mb-2 text-primary-500"></i>
+                                    <span class="font-medium">Question</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" id="contribution" name="type" value="contribution" class="hidden peer">
+                                <label for="contribution" class="flex flex-col items-center p-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-gray-700 cursor-pointer transition-all">
+                                    <i class="fas fa-lightbulb text-3xl mb-2 text-secondary-500"></i>
+                                    <span class="font-medium">Contribution</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="titre" class="block text-sm font-medium mb-1">Titre du message *</label>
+                        <input type="text" id="titre" name="titre" required 
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition-all"
+                            placeholder="Titre de votre participation">
+                    </div>
+                    
+                    <div>
+                        <label for="message" class="block text-sm font-medium mb-1">Votre message *</label>
+                        <textarea id="message" name="message" rows="5" required
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition-all"
+                            placeholder="Développez votre question ou contribution ici..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Joindre un fichier PDF (optionnel)</label>
+                        <div class="file-input-wrapper">
+                            <button type="button" class="w-full px-4 py-12 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-primary-500 transition-colors flex flex-col items-center justify-center">
+                                <i class="fas fa-file-pdf text-3xl mb-2 text-red-500"></i>
+                                <span class="text-sm font-medium">Cliquez pour sélectionner un fichier PDF</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400 mt-1">Taille maximale : 10 Mo</span>
+                            </button>
+                            <input type="file" id="fichier" name="fichier" accept=".pdf" class="hidden">
+                        </div>
+                        <div id="file-name" class="mt-2 text-sm text-gray-500 dark:text-gray-400 hidden">
+                            <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                            <span class="file-name-text"></span>
+                            <button type="button" class="ml-2 text-red-500 hover:text-red-600">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="w-full px-6 py-3 rounded-full btn-hover text-white font-semibold shadow-lg hover:shadow-xl transition-all">
+                            <i class="fas fa-paper-plane mr-2"></i>Valider ma participation
+                        </button>
+                    </div>
+                    
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                        * Champs obligatoires. Vos informations personnelles ne seront pas publiées.
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Success Message (hidden by default) -->
+    <div id="success-message" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 max-w-md mx-4 fade-in">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check-circle text-3xl text-green-500"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">Merci pour votre participation !</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-6">
+                    Votre contribution a bien été enregistrée. Elle sera examinée par nos services avant publication.
+                </p>
+                <button id="close-success" class="px-6 py-2 rounded-full bg-primary-500 hover:bg-primary-600 text-white font-medium transition-colors">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contributions Section -->
+    <section id="contributions" class="container mx-auto px-4 py-12 md:py-16">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                <h2 class="text-3xl font-display font-bold mb-4 md:mb-0 bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+                    <i class="fas fa-comment-dots mr-2"></i>Contributions publiques
+                </h2>
+                
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <div class="relative">
+                        <select id="filter-type" class="appearance-none pl-4 pr-10 py-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-transparent cursor-pointer">
+                            <option value="all">Toutes les publications</option>
+                            <option value="question">Questions uniquement</option>
+                            <option value="contribution">Contributions uniquement</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <input type="text" id="search-contributions" placeholder="Rechercher..." 
+                            class="pl-4 pr-10 py-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-transparent w-full">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="contributions-list" class="space-y-6">
+                <!-- Contribution Example 1 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden fade-in" data-type="question">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <div class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold mr-2">
+                                        J
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">JeanD</span>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">Paris</span>
+                                    </div>
+                                </div>
+                                <div class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200">
+                                    <i class="fas fa-question-circle mr-1"></i>Question
+                                </div>
+                            </div>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">12/06/2023</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold mb-3">Quand sera rénové le parc municipal ?</h3>
+                        
+                        <p class="text-gray-700 dark:text-gray-300 mb-4">
+                            Bonjour, je me demandais si des travaux étaient prévus pour rénover le parc municipal qui commence à montrer des signes de vétusté. Certains équipements pour enfants sont cassés et les allées sont en mauvais état.
+                        </p>
+                        
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-secondary-500 flex items-center justify-center text-white font-bold mr-3 mt-1">
+                                    M
+                                </div>
+                                <div>
+                                    <div class="font-medium mb-1">Mairie de Paris</div>
+                                    <p class="text-gray-700 dark:text-gray-300">
+                                        Bonjour Jean, des travaux sont effectivement prévus pour l'automne prochain. Un budget a été voté lors du dernier conseil municipal et les appels d'offres sont en cours. Nous publierons un calendrier détaillé sur notre site dans les prochaines semaines.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contribution Example 2 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden fade-in" data-type="contribution">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <div class="w-8 h-8 rounded-full bg-secondary-500 flex items-center justify-center text-white font-bold mr-2">
+                                        S
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">SophieM</span>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">Lyon</span>
+                                    </div>
+                                </div>
+                                <div class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-secondary-100 dark:bg-secondary-900 text-secondary-800 dark:text-secondary-200">
+                                    <i class="fas fa-lightbulb mr-1"></i>Contribution
+                                </div>
+                            </div>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">05/06/2023</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold mb-3">Proposition pour un système de vélos en libre-service</h3>
+                        
+                        <p class="text-gray-700 dark:text-gray-300 mb-4">
+                            Je propose la mise en place d'un système de vélos en libre-service dans notre ville, similaire à ce qui existe déjà dans d'autres grandes villes. Cela permettrait de réduire la circulation automobile et de promouvoir une mobilité plus durable.
+                        </p>
+                        
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-secondary-500 flex items-center justify-center text-white font-bold mr-3 mt-1">
+                                    M
+                                </div>
+                                <div>
+                                    <div class="font-medium mb-1">Mairie de Lyon</div>
+                                    <p class="text-gray-700 dark:text-gray-300">
+                                        Merci pour votre suggestion Sophie. Ce projet est à l'étude et fait partie de notre plan de mobilité urbaine. Nous organisons une réunion publique le mois prochain pour discuter des différentes options. Nous vous tiendrons informés.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contribution Example 3 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden fade-in" data-type="question">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <div class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold mr-2">
+                                        P
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">PierreL</span>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">Marseille</span>
+                                    </div>
+                                </div>
+                                <div class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200">
+                                    <i class="fas fa-question-circle mr-1"></i>Question
+                                </div>
+                            </div>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">28/05/2023</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold mb-3">Problème de propreté dans le quartier</h3>
+                        
+                        <p class="text-gray-700 dark:text-gray-300 mb-4">
+                            Depuis plusieurs semaines, je constate une accumulation de déchets dans les rues de mon quartier. Les poubelles publiques semblent souvent pleines et les services de nettoyage passent moins fréquemment. Quelles mesures sont envisagées pour améliorer cette situation ?
+                        </p>
+                        
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-secondary-500 flex items-center justify-center text-white font-bold mr-3 mt-1">
+                                    M
+                                </div>
+                                <div>
+                                    <div class="font-medium mb-1">Mairie de Marseille</div>
+                                    <p class="text-gray-700 dark:text-gray-300">
+                                        Nous prenons votre signalement très au sérieux. Une équipe supplémentaire sera déployée dans votre quartier dès la semaine prochaine. Par ailleurs, une campagne de sensibilisation au tri sélectif est prévue dans les écoles et les commerces locaux. N'hésitez pas à nous contacter directement si la situation ne s'améliore pas.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 flex justify-center">
+                <button class="px-6 py-2 rounded-full border border-primary-500 text-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 font-medium transition-colors">
+                    <i class="fas fa-spinner animate-spin mr-2"></i>Charger plus de contributions
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section id="faq" class="bg-gray-50 dark:bg-gray-800 py-12 md:py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-display font-bold mb-8 text-center bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+                    <i class="fas fa-circle-question mr-2"></i>Questions fréquentes
+                </h2>
+                
+                <div class="space-y-4">
+                    <div class="bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden">
+                        <button class="faq-toggle w-full flex justify-between items-center p-6 text-left">
+                            <h3 class="font-semibold">Comment participer à la concertation ?</h3>
+                            <i class="fas fa-chevron-down transition-transform duration-200"></i>
+                        </button>
+                        <div class="faq-content px-6 pb-6 hidden">
+                            <p class="text-gray-700 dark:text-gray-300">
+                                La participation est simple et ne nécessite pas de créer un compte. Il suffit de remplir le formulaire de participation disponible sur cette page. Vous pouvez poser une question ou faire une contribution. Votre participation sera ensuite examinée par nos services avant publication.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden">
+                        <button class="faq-toggle w-full flex justify-between items-center p-6 text-left">
+                            <h3 class="font-semibold">Pourquoi dois-je fournir un pseudo et une ville ?</h3>
+                            <i class="fas fa-chevron-down transition-transform duration-200"></i>
+                        </button>
+                        <div class="faq-content px-6 pb-6 hidden">
+                            <p class="text-gray-700 dark:text-gray-300">
+                                Le pseudo permet d'identifier votre participation de manière anonyme. La ville nous aide à mieux comprendre le contexte de votre question ou contribution et à orienter notre réponse. Ces informations seront visibles publiquement avec votre participation.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden">
+                        <button class="faq-toggle w-full flex justify-between items-center p-6 text-left">
+                            <h3 class="font-semibold">Combien de temps faut-il pour qu'une participation soit publiée ?</h3>
+                            <i class="fas fa-chevron-down transition-transform duration-200"></i>
+                        </button>
+                        <div class="faq-content px-6 pb-6 hidden">
+                            <p class="text-gray-700 dark:text-gray-300">
+                                Nos équipes modèrent chaque participation pour s'assurer qu'elle respecte notre charte de bonne conduite. En général, cela prend entre 2 et 5 jours ouvrés. Vous serez informé par email si votre participation est publiée ou si elle nécessite des modifications.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden">
+                        <button class="faq-toggle w-full flex justify-between items-center p-6 text-left">
+                            <h3 class="font-semibold">Puis-je modifier ou supprimer ma participation après l'avoir envoyée ?</h3>
+                            <i class="fas fa-chevron-down transition-transform duration-200"></i>
+                        </button>
+                        <div class="faq-content px-6 pb-6 hidden">
+                            <p class="text-gray-700 dark:text-gray-300">
+                                Une fois envoyée, vous ne pouvez plus modifier votre participation directement. Si vous souhaitez apporter des modifications ou la retirer, vous pouvez nous contacter à l'adresse concertation@villedemo.fr en précisant votre pseudo et la date de votre participation.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden">
+                        <button class="faq-toggle w-full flex justify-between items-center p-6 text-left">
+                            <h3 class="font-semibold">Quand puis-je espérer une réponse à ma question ?</h3>
+                            <i class="fas fa-chevron-down transition-transform duration-200"></i>
+                        </button>
+                        <div class="faq-content px-6 pb-6 hidden">
+                            <p class="text-gray-700 dark:text-gray-300">
+                                Nous nous engageons à répondre à toutes les questions dans un délai maximum de 15 jours. Les questions les plus fréquentes ou urgentes sont traitées en priorité. Vous recevrez une notification par email lorsque notre réponse sera publiée.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Admin Login Modal -->
+    <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 max-w-md w-full mx-4 fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">
+                    <i class="fas fa-lock mr-2 text-primary-500"></i>Connexion modérateur
+                </h3>
+                <button id="close-admin-modal" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="admin-login-form" class="space-y-4">
+                <div>
+                    <label for="admin-login" class="block text-sm font-medium mb-1">Identifiant</label>
+                    <input type="text" id="admin-login" name="login" required 
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition-all"
+                        placeholder="Votre identifiant">
+                </div>
+                
+                <div>
+                    <label for="admin-password" class="block text-sm font-medium mb-1">Mot de passe</label>
+                    <input type="password" id="admin-password" name="password" required 
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition-all"
+                        placeholder="Votre mot de passe">
+                </div>
+                
+                <div class="pt-2">
+                    <button type="submit" class="w-full px-6 py-3 rounded-full btn-hover text-white font-semibold shadow-lg hover:shadow-xl transition-all">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Se connecter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Admin Dashboard (hidden by default) -->
+    <div id="admin-dashboard" class="fixed inset-0 z-50 bg-white dark:bg-gray-900 hidden overflow-y-auto">
+        <div class="container mx-auto px-4 py-6">
+            <!-- Admin Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
+                        <i class="fas fa-user-shield text-white text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-display font-bold">
+                        Tableau de bord modérateur
+                    </h1>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button id="export-data" class="px-4 py-2 rounded-full bg-primary-500 hover:bg-primary-600 text-white font-medium transition-colors">
+                        <i class="fas fa-file-export mr-2"></i>Exporter les données
+                    </button>
+                    <button id="logout-admin" class="px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Admin Navigation -->
+            <div class="mb-8">
+                <div class="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-700">
+                    <button class="admin-tab active px-4 py-2 font-medium border-b-2 border-primary-500 text-primary-500" data-tab="participations">
+                        <i class="fas fa-comments mr-2"></i>Participations
+                    </button>
+                    <button class="admin-tab px-4 py-2 font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" data-tab="statistics">
+                        <i class="fas fa-chart-bar mr-2"></i>Statistiques
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Participations Tab -->
+            <div id="participations-tab" class="admin-tab-content">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <div class="relative w-full sm:w-64">
+                        <select id="admin-filter-status" class="appearance-none pl-4 pr-10 py-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-transparent cursor-pointer w-full">
+                            <option value="all">Tous les statuts</option>
+                            <option value="pending">En attente</option>
+                            <option value="published">Publiées</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="relative w-full sm:w-96">
+                        <input type="text" id="admin-search" placeholder="Rechercher une participation..." 
+                            class="pl-4 pr-10 py-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-transparent w-full">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Date
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Pseudo
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Type
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Titre
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Statut
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <!-- Participation 1 -->
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        12/06/2023
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold">
+                                                J
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium">JeanD</div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">Paris</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200">
+                                            Question
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        Quand sera rénové le parc municipal ?
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                                            Publiée
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary-500 hover:text-primary-700 mr-3">
+                                            <i class="fas fa-reply"></i>
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Participation 2 -->
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        05/06/2023
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-8 w-8 rounded-full bg-secondary-500 flex items-center justify-center text-white font-bold">
+                                                S
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium">SophieM</div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">Lyon</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-secondary-100 dark:bg-secondary-900 text-secondary-800 dark:text-secondary-200">
+                                            Contribution
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        Proposition pour un système de vélos en libre-service
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                                            Publiée
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary-500 hover:text-primary-700 mr-3">
+                                            <i class="fas fa-reply"></i>
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Participation 3 -->
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        28/05/2023
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold">
+                                                P
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium">PierreL</div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">Marseille</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200">
+                                            Question
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        Problème de propreté dans le quartier
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                                            Publiée
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary-500 hover:text-primary-700 mr-3">
+                                            <i class="fas fa-reply"></i>
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Participation 4 (Pending) -->
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        15/06/2023
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-8 w-8 rounded-full bg-secondary-500 flex items-center justify-center text-white font-bold">
+                                                M
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium">MarieT</div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">Toulouse</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-secondary-100 dark:bg-secondary-900 text-secondary-800 dark:text-secondary-200">
+                                            Contribution
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        Idée pour un festival culturel
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
+                                            En attente
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary-500 hover:text-primary-700 mr-3">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                        Affichage de <span class="font-medium">1</span> à <span class="font-medium">4</span> sur <span class="font-medium">4</span> participations
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium disabled:opacity-50" disabled>
+                            <i class="fas fa-chevron-left mr-2"></i>Précédent
+                        </button>
+                        <button class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium">
+                            Suivant<i class="fas fa-chevron-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statistics Tab (hidden by default) -->
+            <div id="statistics-tab" class="admin-tab-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                        <h3 class="text-lg font-medium mb-4">Répartition par type</h3>
+                        <div class="h-64 flex items-center justify-center">
+                            <div class="w-48 h-48 rounded-full relative">
+                                <div class="absolute inset-0 rounded-full border-8 border-primary-500" style="clip: rect(0, 48px, 48px, 24px); transform: rotate(120deg);"></div>
+                                <div class="absolute inset-0 rounded-full border-8 border-secondary-500" style="clip: rect(0, 24px, 48px, 0); transform: rotate(60deg);"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold">64%</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">Questions</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-center space-x-6 mt-4">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 rounded-full bg-primary-500 mr-2"></div>
+                                <span class="text-sm">Questions</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 rounded-full bg-secondary-500 mr-2"></div>
+                                <span class="text-sm">Contributions</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                        <h3 class="text-lg font-medium mb-4">Activité récente</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-medium">Cette semaine</span>
+                                    <span class="text-sm font-medium">12</span>
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                    <div class="bg-primary-500 h-2 rounded-full" style="width: 60%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-medium">Semaine dernière</span>
+                                    <span class="text-sm font-medium">18</span>
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                    <div class="bg-secondary-500 h-2 rounded-full" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-medium">Ce mois</span>
+                                    <span class="text-sm font-medium">42</span>
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                    <div class="bg-primary-500 h-2 rounded-full" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
+                    <h3 class="text-lg font-medium mb-4">Top villes participantes</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Ville
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Questions
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Contributions
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Total
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        Paris
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        24
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        12
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        36
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        Lyon
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        18
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        8
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        26
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        Marseille
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        15
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        5
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        20
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        Toulouse
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        12
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        6
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        18
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-100 dark:bg-gray-800 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-display font-bold mb-4">Concertation Publique</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">
+                        Plateforme de participation citoyenne pour contribuer à l'avenir de votre ville.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-display font-bold mb-4">Liens utiles</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#participer" class="text-gray-600 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Participer</a></li>
+                        <li><a href="#contributions" class="text-gray-600 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Voir les contributions</a></li>
+                        <li><a href="#faq" class="text-gray-600 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">FAQ</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Mentions légales</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-display font-bold mb-4">Contact</h3>
+                    <address class="not-italic text-gray-600 dark:text-gray-300 space-y-2">
+                        <p><i class="fas fa-envelope mr-2"></i> concertation@villedemo.fr</p>
+                        <p><i class="fas fa-phone mr-2"></i> 01 23 45 67 89</p>
+                        <p><i class="fas fa-map-marker-alt mr-2"></i> Hôtel de Ville, 75000 Paris</p>
+                    </address>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 text-center text-gray-500 dark:text-gray-400">
+                <p>&copy; 2023 Concertation Publique. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Dark mode toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+            setTimeout(() => {
+                document.querySelector('#mobile-menu > div').classList.remove('translate-x-full');
+            }, 10);
+        });
+        
+        closeMobileMenu.addEventListener('click', () => {
+            document.querySelector('#mobile-menu > div').classList.add('translate-x-full');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+            }, 300);
+        });
+        
+        // File input handling
+        const fileInput = document.getElementById('fichier');
+        const fileNameDisplay = document.getElementById('file-name');
+        const fileNameText = document.querySelector('.file-name-text');
+        const fileRemoveBtn = fileNameDisplay.querySelector('button');
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('Le fichier est trop volumineux (max 10 Mo)');
+                    fileInput.value = '';
+                    return;
+                }
+                if (file.type !== 'application/pdf') {
+                    alert('Seuls les fichiers PDF sont acceptés');
+                    fileInput.value = '';
+                    return;
+                }
+                fileNameText.textContent = file.name;
+                fileNameDisplay.classList.remove('hidden');
+            }
+        });
+        
+        fileRemoveBtn.addEventListener('click', () => {
+            fileInput.value = '';
+            fileNameDisplay.classList.add('hidden');
+        });
+        
+        // Form submission
+        const participationForm = document.getElementById('participation-form');
+        const successMessage = document.getElementById('success-message');
+        const closeSuccess = document.getElementById('close-success');
+        
+        participationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Here you would normally send the form data to the server
+            // For demo purposes, we'll just show the success message
+            participationForm.reset();
+            fileNameDisplay.classList.add('hidden');
+            successMessage.classList.remove('hidden');
+        });
+        
+        closeSuccess.addEventListener('click', () => {
+            successMessage.classList.add('hidden');
+        });
+        
+        // Admin modal
+        const adminLoginBtn = document.getElementById('admin-login-btn');
+        const adminModal = document.getElementById('admin-modal');
+        const closeAdminModal = document.getElementById('close-admin-modal');
+        const adminLoginForm = document.getElementById('admin-login-form');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const logoutAdmin = document.getElementById('logout-admin');
+        
+        adminLoginBtn.addEventListener('click', () => {
+            adminModal.classList.remove('hidden');
+        });
+        
+        closeAdminModal.addEventListener('click', () => {
+            adminModal.classList.add('hidden');
+        });
+        
+        adminLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const login = document.getElementById('admin-login').value;
+            const password = document.getElementById('admin-password').value;
+            
+            if (login === 'MO' && password === 'tmp123') {
+                adminModal.classList.add('hidden');
+                adminDashboard.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                alert('Identifiants incorrects');
+            }
+        });
+        
+        logoutAdmin.addEventListener('click', () => {
+            adminDashboard.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Admin tabs
+        const adminTabs = document.querySelectorAll('.admin-tab');
+        const adminTabContents = document.querySelectorAll('.admin-tab-content');
+        
+        adminTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                adminTabs.forEach(t => t.classList.remove('active', 'text-primary-500', 'border-primary-500'));
+                tab.classList.add('active', 'text-primary-500', 'border-primary-500');
+                
+                // Hide all tab contents
+                adminTabContents.forEach(content => content.classList.add('hidden'));
+                
+                // Show the selected tab content
+                const tabId = tab.getAttribute('data-tab') + '-tab';
+                document.getElementById(tabId).classList.remove('hidden');
+            });
+        });
+        
+        // FAQ toggles
+        const faqToggles = document.querySelectorAll('.faq-toggle');
+        
+        faqToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const content = toggle.nextElementSibling;
+                const icon = toggle.querySelector('i');
+                
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+        
+        // Filter contributions
+        const filterType = document.getElementById('filter-type');
+        const contributions = document.querySelectorAll('#contributions-list > div');
+        
+        filterType.addEventListener('change', () => {
+            const type = filterType.value;
+            
+            contributions.forEach(contribution => {
+                if (type === 'all' || contribution.getAttribute('data-type') === type) {
+                    contribution.classList.remove('hidden');
+                } else {
+                    contribution.classList.add('hidden');
+                }
+            });
+        });
+        
+        // Search contributions
+        const searchInput = document.getElementById('search-contributions');
+        
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            contributions.forEach(contribution => {
+                const text = contribution.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    contribution.classList.remove('hidden');
+                } else {
+                    contribution.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=StephaneG78/concertation-test-1-deepsite-v2" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>

@@ -37,24 +37,61 @@
             background-color: hsl(var(--background));
             color: hsl(var(--foreground));
             transition: background-color 0.3s, color 0.3s;
+            padding-top: 60px;
+        }
+
+        nav {
+            background-color: hsl(var(--background));
+            border-bottom: 1px solid hsl(var(--border));
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: hsl(var(--foreground));
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+        }
+
+        .nav-links a:hover {
+            background-color: hsl(var(--primary) / 0.1);
+        }
+
+        .admin-link {
+            color: hsl(var(--primary)) !important;
+            font-weight: 500;
         }
 
         .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        header {
-            border-bottom: 1px solid hsl(var(--border));
-            padding: 1rem 0;
+            padding: 2rem 1rem;
         }
 
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 2rem;
         }
 
         .logo {
@@ -70,10 +107,6 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-        }
-
-        main {
-            padding: 2rem 0;
         }
 
         h1 {
@@ -98,6 +131,11 @@
         @media (max-width: 768px) {
             .grid-cols-2 {
                 grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+            
+            .nav-links {
+                gap: 0.5rem;
+                font-size: 0.9rem;
             }
         }
 
@@ -128,6 +166,7 @@
             border-radius: var(--radius);
             font-size: 0.75rem;
             font-weight: 500;
+            margin-bottom: 0.5rem;
         }
 
         .badge-question {
@@ -148,6 +187,36 @@
         .dark .badge-contribution {
             background-color: #14532d;
             color: #bbf7d0;
+        }
+
+        .badge-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .dark .badge-pending {
+            background-color: #92400e;
+            color: #fef3c7;
+        }
+
+        .badge-approved {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .dark .badge-approved {
+            background-color: #166534;
+            color: #dcfce7;
+        }
+
+        .badge-rejected {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .dark .badge-rejected {
+            background-color: #991b1b;
+            color: #fee2e2;
         }
 
         .form-group {
@@ -190,16 +259,35 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
+            border: none;
         }
 
         .btn-primary {
             background-color: hsl(var(--primary));
             color: hsl(var(--primary-foreground));
-            border: 1px solid hsl(var(--primary));
         }
 
         .btn-primary:hover {
             background-color: hsl(var(--primary) / 0.9);
+        }
+
+        .btn-secondary {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            border: 1px solid hsl(var(--border));
+        }
+
+        .btn-secondary:hover {
+            background-color: hsl(var(--background) / 0.8);
+        }
+
+        .btn-danger {
+            background-color: hsl(0 72% 51%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: hsl(0 72% 51% / 0.9);
         }
 
         .file-upload {
@@ -221,7 +309,7 @@
             border-radius: var(--radius);
             padding: 1rem;
             position: sticky;
-            top: 1rem;
+            top: 6rem;
         }
 
         .filters h3 {
@@ -234,12 +322,18 @@
             background-color: hsl(var(--primary));
             color: hsl(var(--primary-foreground));
             padding: 0.5rem 0;
+            position: sticky;
+            top: 60px;
+            z-index: 90;
         }
 
         .admin-bar-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
 
         .admin-actions {
@@ -251,18 +345,69 @@
             padding: 0.25rem 0.5rem;
             font-size: 0.875rem;
         }
+
+        .response-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: hsl(var(--background) / 0.5);
+            border-radius: var(--radius);
+            border-left: 3px solid hsl(var(--primary));
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: hsl(var(--background));
+            padding: 2rem;
+            border-radius: var(--radius);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: hsl(var(--foreground));
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <!-- Header avec bascule thème clair/sombre -->
-    <header>
-        <div class="container header-content">
+    <!-- Barre de navigation -->
+    <nav>
+        <div class="nav-container">
             <div class="logo">Concertation Publique</div>
-            <button id="themeToggle" class="theme-toggle">
-                <span id="themeIcon">🌙</span> <span id="themeText">Mode sombre</span>
-            </button>
+            <div class="nav-links">
+                <a href="#" id="publicLink">Contributions</a>
+                <a href="#" id="submitLink">Soumettre</a>
+                <a href="#" id="adminLink" class="admin-link">Admin</a>
+                <button id="themeToggle" class="theme-toggle">
+                    <span id="themeIcon">🌙</span>
+                </button>
+            </div>
         </div>
-    </header>
+    </nav>
 
     <!-- Page d'accueil avec liste des contributions -->
     <main class="container" id="mainContent">
@@ -275,7 +420,7 @@
                     <h3>Filtrer les contributions</h3>
                     <div class="form-group">
                         <label for="contributionType">Type</label>
-                        <select id="contributionType" class="filter-select">
+                        <select id="filterType" class="filter-select">
                             <option value="all">Tous les types</option>
                             <option value="question">Questions</option>
                             <option value="contribution">Contributions</option>
@@ -319,14 +464,14 @@
         </div>
     </main>
 
-    <!-- Page de soumission (masquée par défaut) -->
-    <main class="container" id="submitPage" style="display: none;">
+    <!-- Page de soumission -->
+    <main class="container hidden" id="submitPage">
         <h1>Soumettre une contribution</h1>
         
         <form id="contributionForm" style="max-width: 600px; margin: 0 auto;">
             <div class="form-group">
-                <label for="contributionType">Type de contribution</label>
-                <select id="contributionType" required>
+                <label for="submitType">Type de contribution</label>
+                <select id="submitType" required>
                     <option value="">Sélectionner...</option>
                     <option value="question">Question</option>
                     <option value="contribution">Contribution</option>
@@ -356,13 +501,14 @@
         </form>
     </main>
 
-    <!-- Backoffice admin (masqué par défaut) -->
-    <div id="adminBar" style="display: none;">
+    <!-- Backoffice admin -->
+    <div id="adminBar" class="hidden">
         <div class="admin-bar">
-            <div class="container admin-bar-content">
+            <div class="admin-bar-content">
                 <div>Backoffice de modération</div>
                 <div class="admin-actions">
                     <button class="btn btn-primary" id="viewPublic">Voir site public</button>
+                    <button class="btn btn-secondary" id="logoutBtn">Déconnexion</button>
                 </div>
             </div>
         </div>
@@ -372,41 +518,91 @@
             
             <div class="grid grid-cols-1 gap-4" id="moderationList">
                 <!-- Contribution à modérer -->
-                <div class="card">
+                <div class="card" data-id="1" data-status="pending">
                     <div class="badge badge-question">Question</div>
+                    <div class="badge badge-pending">En attente</div>
                     <h2>Problème de stationnement près de l'école</h2>
-                    <p>Posté le 18/06/2023 | Statut: En attente</p>
+                    <p>Posté le 18/06/2023</p>
                     <p>Les parents déposant leurs enfants bloquent souvent les rues adjacentes. Que peut-on faire ?</p>
                     
                     <div class="admin-actions" style="margin-top: 1rem;">
-                        <button class="btn btn-primary">Approuver</button>
-                        <button class="btn btn-primary">Rejeter</button>
-                        <button class="btn btn-primary">Répondre</button>
+                        <button class="btn btn-primary approve-btn">Approuver</button>
+                        <button class="btn btn-danger reject-btn">Rejeter</button>
+                        <button class="btn btn-secondary response-btn">Répondre</button>
                     </div>
                 </div>
                 
                 <!-- Contribution modérée -->
-                <div class="card">
+                <div class="card" data-id="2" data-status="approved">
                     <div class="badge badge-contribution">Contribution</div>
+                    <div class="badge badge-approved">Approuvé</div>
                     <h2>Idées pour le nouveau parc</h2>
-                    <p>Posté le 12/06/2023 | Statut: Approuvé</p>
+                    <p>Posté le 12/06/2023</p>
                     <p>Proposition détaillée pour l'aménagement du nouveau parc avec aires de jeux inclusives.</p>
                     <a href="#" class="btn btn-primary" style="margin-top: 0.5rem;">Voir le PDF</a>
                     
-                    <div style="margin-top: 1rem; padding: 1rem; background-color: hsl(var(--background) / 0.5); border-radius: var(--radius);">
+                    <div class="response-box">
                         <strong>Réponse de la mairie (20/06/2023):</strong>
                         <p>Merci pour cette contribution détaillée. Plusieurs de vos suggestions seront intégrées dans le projet final.</p>
+                    </div>
+                </div>
+
+                <!-- Contribution rejetée -->
+                <div class="card" data-id="3" data-status="rejected">
+                    <div class="badge badge-question">Question</div>
+                    <div class="badge badge-rejected">Rejeté</div>
+                    <h2>Demande d'information personnelle</h2>
+                    <p>Posté le 10/06/2023</p>
+                    <p>Pouvez-vous me donner les coordonnées du maire ?</p>
+                    
+                    <div class="response-box">
+                        <strong>Raison du rejet (15/06/2023):</strong>
+                        <p>Cette demande concerne des informations personnelles qui ne peuvent être partagées sur cette plateforme.</p>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
+    <!-- Modale de connexion admin -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2 style="margin-bottom: 1rem;">Connexion administrateur</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Identifiant</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Se connecter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modale de réponse -->
+    <div id="responseModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2 style="margin-bottom: 1rem;">Répondre à la contribution</h2>
+            <form id="responseForm">
+                <input type="hidden" id="responseContributionId">
+                <div class="form-group">
+                    <label for="responseContent">Votre réponse</label>
+                    <textarea id="responseContent" required style="min-height: 150px;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Envoyer la réponse</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         // Gestion du thème clair/sombre
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
-        const themeText = document.getElementById('themeText');
         const html = document.documentElement;
         
         // Vérifier la préférence système
@@ -414,19 +610,17 @@
         if (prefersDark) {
             html.classList.add('dark');
             themeIcon.textContent = '☀️';
-            themeText.textContent = 'Mode clair';
         }
         
         themeToggle.addEventListener('click', () => {
             html.classList.toggle('dark');
             const isDark = html.classList.contains('dark');
             themeIcon.textContent = isDark ? '☀️' : '🌙';
-            themeText.textContent = isDark ? 'Mode clair' : 'Mode sombre';
         });
         
         // Simulation de filtrage
         document.getElementById('applyFilters').addEventListener('click', () => {
-            const type = document.getElementById('contributionType').value;
+            const type = document.getElementById('filterType').value;
             const search = document.getElementById('search').value.toLowerCase();
             const cards = document.querySelectorAll('#contributionsList .card');
             
@@ -459,48 +653,141 @@
         document.getElementById('contributionForm').addEventListener('submit', (e) => {
             e.preventDefault();
             alert('Merci pour votre contribution! Elle sera examinée par nos services.');
-            // En réalité, ici on enverrait les données à un serveur
+            showPage('mainContent');
+            document.getElementById('contributionForm').reset();
+            document.getElementById('fileName').style.display = 'none';
         });
         
-        // Navigation simulée (pour le prototype)
+        // Navigation
         function showPage(pageId) {
-            document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('submitPage').style.display = 'none';
-            document.getElementById('adminBar').style.display = 'none';
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('submitPage').classList.add('hidden');
+            document.getElementById('adminBar').classList.add('hidden');
             
-            document.getElementById(pageId).style.display = 'block';
+            document.getElementById(pageId).classList.remove('hidden');
+            window.scrollTo(0, 0);
         }
         
-        // Pour tester le backoffice, ajouter ?admin=true à l'URL
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('admin') === 'true') {
-            showPage('adminBar');
-        }
-        
-        // Lien pour tester la page de soumission
-        setTimeout(() => {
-            const submitLink = document.createElement('a');
-            submitLink.href = '#';
-            submitLink.textContent = 'Tester le formulaire de soumission';
-            submitLink.style.position = 'fixed';
-            submitLink.style.bottom = '1rem';
-            submitLink.style.right = '1rem';
-            submitLink.style.padding = '0.5rem 1rem';
-            submitLink.style.backgroundColor = 'hsl(var(--primary))';
-            submitLink.style.color = 'hsl(var(--primary-foreground))';
-            submitLink.style.borderRadius = 'var(--radius)';
-            submitLink.style.textDecoration = 'none';
-            submitLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                showPage('submitPage');
-            });
-            document.body.appendChild(submitLink);
-        }, 1000);
-        
-        // Bouton "Voir site public" dans l'admin
-        document.getElementById('viewPublic')?.addEventListener('click', () => {
+        document.getElementById('publicLink').addEventListener('click', (e) => {
+            e.preventDefault();
             showPage('mainContent');
         });
+        
+        document.getElementById('submitLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('submitPage');
+        });
+        
+        document.getElementById('adminLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showLoginModal();
+        });
+        
+        document.getElementById('viewPublic').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('mainContent');
+        });
+        
+        // Gestion de la modale de connexion
+        const loginModal = document.getElementById('loginModal');
+        
+        function showLoginModal() {
+            loginModal.style.display = 'flex';
+            document.getElementById('username').focus();
+        }
+        
+        function hideLoginModal() {
+            loginModal.style.display = 'none';
+        }
+        
+        document.querySelector('#loginModal .modal-close').addEventListener('click', hideLoginModal);
+        
+        loginModal.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                hideLoginModal();
+            }
+        });
+        
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Authentification avec MO/tmp123
+            if (username === 'MO' && password === 'tmp123') {
+                hideLoginModal();
+                showPage('adminBar');
+                document.getElementById('loginForm').reset();
+            } else {
+                alert('Identifiants incorrects. Utilisez MO/tmp123 pour vous connecter.');
+            }
+        });
+        
+        // Déconnexion
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('mainContent');
+        });
+        
+        // Gestion de la modale de réponse
+        const responseModal = document.getElementById('responseModal');
+        
+        function showResponseModal(contributionId) {
+            document.getElementById('responseContributionId').value = contributionId;
+            responseModal.style.display = 'flex';
+            document.getElementById('responseContent').focus();
+        }
+        
+        function hideResponseModal() {
+            responseModal.style.display = 'none';
+        }
+        
+        document.querySelector('#responseModal .modal-close').addEventListener('click', hideResponseModal);
+        
+        responseModal.addEventListener('click', (e) => {
+            if (e.target === responseModal) {
+                hideResponseModal();
+            }
+        });
+        
+        document.getElementById('responseForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const contributionId = document.getElementById('responseContributionId').value;
+            const responseContent = document.getElementById('responseContent').value;
+            
+            // Simuler l'envoi de la réponse
+            alert(`Réponse envoyée pour la contribution #${contributionId}`);
+            hideResponseModal();
+            document.getElementById('responseForm').reset();
+        });
+        
+        // Gestion des boutons de modération
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('approve-btn')) {
+                const card = e.target.closest('.card');
+                card.dataset.status = 'approved';
+                card.querySelector('.badge-pending').className = 'badge badge-approved';
+                card.querySelector('.badge-pending').textContent = 'Approuvé';
+                alert('Contribution approuvée avec succès');
+            }
+            
+            if (e.target.classList.contains('reject-btn')) {
+                const card = e.target.closest('.card');
+                card.dataset.status = 'rejected';
+                card.querySelector('.badge-pending').className = 'badge badge-rejected';
+                card.querySelector('.badge-pending').textContent = 'Rejeté';
+                alert('Contribution rejetée avec succès');
+            }
+            
+            if (e.target.classList.contains('response-btn')) {
+                const card = e.target.closest('.card');
+                const contributionId = card.dataset.id;
+                showResponseModal(contributionId);
+            }
+        });
+        
+        // Afficher la page principale au chargement
+        showPage('mainContent');
     </script>
 </body>
 </html>

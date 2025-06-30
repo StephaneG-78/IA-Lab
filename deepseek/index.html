@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concertation Publique | Ville de [Nom]</title>
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --primary: 221.2 83.2% 53.3%;
+            --primary-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 221.2 83.2% 53.3%;
+            --radius: 0.5rem;
+        }
+
+        .dark {
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --primary: 217.2 91.2% 59.8%;
+            --primary-foreground: 222.2 47.4% 11.2%;
+            --border: 217.2 32.6% 17.5%;
+            --input: 217.2 32.6% 17.5%;
+            --ring: 224.3 76.3% 48%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        header {
+            border-bottom: 1px solid hsl(var(--border));
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: hsl(var(--foreground));
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        main {
+            padding: 2rem 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @media (max-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+        }
+
+        .card {
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            transition: border-color 0.3s;
+        }
+
+        .card:hover {
+            border-color: hsl(var(--primary));
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: hsl(var(--foreground) / 0.8);
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-question {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .dark .badge-question {
+            background-color: #0c4a6e;
+            color: #bae6fd;
+        }
+
+        .badge-contribution {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .dark .badge-contribution {
+            background-color: #14532d;
+            color: #bbf7d0;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid hsl(var(--input));
+            border-radius: var(--radius);
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: 1px solid hsl(var(--primary));
+        }
+
+        .btn-primary:hover {
+            background-color: hsl(var(--primary) / 0.9);
+        }
+
+        .file-upload {
+            border: 1px dashed hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: hsl(var(--primary));
+        }
+
+        .filters {
+            background-color: hsl(var(--background));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1rem;
+            position: sticky;
+            top: 1rem;
+        }
+
+        .filters h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .admin-bar {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            padding: 0.5rem 0;
+        }
+
+        .admin-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .admin-actions .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header avec bascule thème clair/sombre -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">Concertation Publique</div>
+            <button id="themeToggle" class="theme-toggle">
+                <span id="themeIcon">🌙</span> <span id="themeText">Mode sombre</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Page d'accueil avec liste des contributions -->
+    <main class="container" id="mainContent">
+        <h1>Contributions publiques</h1>
+        
+        <div class="grid grid-cols-2">
+            <!-- Filtres -->
+            <aside>
+                <div class="filters">
+                    <h3>Filtrer les contributions</h3>
+                    <div class="form-group">
+                        <label for="contributionType">Type</label>
+                        <select id="contributionType" class="filter-select">
+                            <option value="all">Tous les types</option>
+                            <option value="question">Questions</option>
+                            <option value="contribution">Contributions</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="search">Recherche</label>
+                        <input type="text" id="search" placeholder="Rechercher...">
+                    </div>
+                    <button id="applyFilters" class="btn btn-primary">Appliquer</button>
+                </div>
+            </aside>
+            
+            <!-- Liste des contributions -->
+            <div class="grid grid-cols-1 gap-4" id="contributionsList">
+                <!-- Contribution 1 -->
+                <div class="card" data-type="question">
+                    <div class="badge badge-question">Question</div>
+                    <h2>Quelles mesures pour améliorer la sécurité dans le quartier ?</h2>
+                    <p>Posté le 15/06/2023</p>
+                    <p>Je m'inquiète de l'augmentation des actes de vandalisme dans notre quartier. Quelles mesures concrètes la mairie envisage-t-elle ?</p>
+                </div>
+                
+                <!-- Contribution 2 -->
+                <div class="card" data-type="contribution">
+                    <div class="badge badge-contribution">Contribution</div>
+                    <h2>Proposition d'aménagement du parc central</h2>
+                    <p>Posté le 10/06/2023</p>
+                    <p>Je propose d'ajouter plus d'arbres et de bancs dans le parc central pour en faire un espace plus convivial. Voir le PDF joint pour les détails.</p>
+                    <a href="#" class="btn btn-primary" style="margin-top: 0.5rem;">Voir le PDF</a>
+                </div>
+                
+                <!-- Contribution 3 -->
+                <div class="card" data-type="question">
+                    <div class="badge badge-question">Question</div>
+                    <h2>Horaires d'ouverture de la médiathèque</h2>
+                    <p>Posté le 05/06/2023</p>
+                    <p>Serait-il possible d'étendre les horaires d'ouverture de la médiathèque le week-end ?</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Page de soumission (masquée par défaut) -->
+    <main class="container" id="submitPage" style="display: none;">
+        <h1>Soumettre une contribution</h1>
+        
+        <form id="contributionForm" style="max-width: 600px; margin: 0 auto;">
+            <div class="form-group">
+                <label for="contributionType">Type de contribution</label>
+                <select id="contributionType" required>
+                    <option value="">Sélectionner...</option>
+                    <option value="question">Question</option>
+                    <option value="contribution">Contribution</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="title">Titre</label>
+                <input type="text" id="title" required placeholder="Titre de votre contribution">
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Contenu</label>
+                <textarea id="content" required placeholder="Détails de votre question ou contribution"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="file">Joindre un fichier PDF (optionnel)</label>
+                <div class="file-upload" id="fileUpload">
+                    <p>Glissez-déposez un fichier PDF ici ou cliquez pour sélectionner</p>
+                    <input type="file" id="file" accept=".pdf" style="display: none;">
+                </div>
+                <p id="fileName" style="font-size: 0.875rem; margin-top: 0.5rem; display: none;"></p>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Envoyer la contribution</button>
+        </form>
+    </main>
+
+    <!-- Backoffice admin (masqué par défaut) -->
+    <div id="adminBar" style="display: none;">
+        <div class="admin-bar">
+            <div class="container admin-bar-content">
+                <div>Backoffice de modération</div>
+                <div class="admin-actions">
+                    <button class="btn btn-primary" id="viewPublic">Voir site public</button>
+                </div>
+            </div>
+        </div>
+        
+        <main class="container">
+            <h1>Modération des contributions</h1>
+            
+            <div class="grid grid-cols-1 gap-4" id="moderationList">
+                <!-- Contribution à modérer -->
+                <div class="card">
+                    <div class="badge badge-question">Question</div>
+                    <h2>Problème de stationnement près de l'école</h2>
+                    <p>Posté le 18/06/2023 | Statut: En attente</p>
+                    <p>Les parents déposant leurs enfants bloquent souvent les rues adjacentes. Que peut-on faire ?</p>
+                    
+                    <div class="admin-actions" style="margin-top: 1rem;">
+                        <button class="btn btn-primary">Approuver</button>
+                        <button class="btn btn-primary">Rejeter</button>
+                        <button class="btn btn-primary">Répondre</button>
+                    </div>
+                </div>
+                
+                <!-- Contribution modérée -->
+                <div class="card">
+                    <div class="badge badge-contribution">Contribution</div>
+                    <h2>Idées pour le nouveau parc</h2>
+                    <p>Posté le 12/06/2023 | Statut: Approuvé</p>
+                    <p>Proposition détaillée pour l'aménagement du nouveau parc avec aires de jeux inclusives.</p>
+                    <a href="#" class="btn btn-primary" style="margin-top: 0.5rem;">Voir le PDF</a>
+                    
+                    <div style="margin-top: 1rem; padding: 1rem; background-color: hsl(var(--background) / 0.5); border-radius: var(--radius);">
+                        <strong>Réponse de la mairie (20/06/2023):</strong>
+                        <p>Merci pour cette contribution détaillée. Plusieurs de vos suggestions seront intégrées dans le projet final.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Gestion du thème clair/sombre
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const html = document.documentElement;
+        
+        // Vérifier la préférence système
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+            html.classList.add('dark');
+            themeIcon.textContent = '☀️';
+            themeText.textContent = 'Mode clair';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            themeIcon.textContent = isDark ? '☀️' : '🌙';
+            themeText.textContent = isDark ? 'Mode clair' : 'Mode sombre';
+        });
+        
+        // Simulation de filtrage
+        document.getElementById('applyFilters').addEventListener('click', () => {
+            const type = document.getElementById('contributionType').value;
+            const search = document.getElementById('search').value.toLowerCase();
+            const cards = document.querySelectorAll('#contributionsList .card');
+            
+            cards.forEach(card => {
+                const cardType = card.dataset.type;
+                const cardText = card.textContent.toLowerCase();
+                
+                const typeMatch = type === 'all' || cardType === type;
+                const searchMatch = cardText.includes(search);
+                
+                card.style.display = typeMatch && searchMatch ? 'block' : 'none';
+            });
+        });
+        
+        // Gestion du formulaire
+        document.getElementById('fileUpload').addEventListener('click', () => {
+            document.getElementById('file').click();
+        });
+        
+        document.getElementById('file').addEventListener('change', (e) => {
+            const fileName = document.getElementById('fileName');
+            if (e.target.files.length > 0) {
+                fileName.textContent = `Fichier sélectionné: ${e.target.files[0].name}`;
+                fileName.style.display = 'block';
+            } else {
+                fileName.style.display = 'none';
+            }
+        });
+        
+        document.getElementById('contributionForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Merci pour votre contribution! Elle sera examinée par nos services.');
+            // En réalité, ici on enverrait les données à un serveur
+        });
+        
+        // Navigation simulée (pour le prototype)
+        function showPage(pageId) {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('submitPage').style.display = 'none';
+            document.getElementById('adminBar').style.display = 'none';
+            
+            document.getElementById(pageId).style.display = 'block';
+        }
+        
+        // Pour tester le backoffice, ajouter ?admin=true à l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('admin') === 'true') {
+            showPage('adminBar');
+        }
+        
+        // Lien pour tester la page de soumission
+        setTimeout(() => {
+            const submitLink = document.createElement('a');
+            submitLink.href = '#';
+            submitLink.textContent = 'Tester le formulaire de soumission';
+            submitLink.style.position = 'fixed';
+            submitLink.style.bottom = '1rem';
+            submitLink.style.right = '1rem';
+            submitLink.style.padding = '0.5rem 1rem';
+            submitLink.style.backgroundColor = 'hsl(var(--primary))';
+            submitLink.style.color = 'hsl(var(--primary-foreground))';
+            submitLink.style.borderRadius = 'var(--radius)';
+            submitLink.style.textDecoration = 'none';
+            submitLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('submitPage');
+            });
+            document.body.appendChild(submitLink);
+        }, 1000);
+        
+        // Bouton "Voir site public" dans l'admin
+        document.getElementById('viewPublic')?.addEventListener('click', () => {
+            showPage('mainContent');
+        });
+    </script>
+</body>
+</html>

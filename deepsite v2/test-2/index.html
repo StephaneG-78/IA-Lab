@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="fr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concertation Publique | Participation Citoyenne</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .file-input::file-selector-button {
+            background-color: #0ea5e9;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .file-input::file-selector-button:hover {
+            background-color: #0284c7;
+        }
+        
+        .tab-active {
+            position: relative;
+        }
+        
+        .tab-active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #0ea5e9;
+            border-radius: 3px;
+        }
+        
+        .dark .file-input::file-selector-button {
+            background-color: #0369a1;
+        }
+        
+        .dark .file-input::file-selector-button:hover {
+            background-color: #0284c7;
+        }
+        
+        .contribution-card {
+            border-left-width: 4px;
+        }
+        
+        .question-card {
+            border-left-color: #0ea5e9;
+        }
+        
+        .contribution-card {
+            border-left-color: #10b981;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 9999px;
+        }
+        
+        .status-pending {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        
+        .status-approved {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        
+        .status-rejected {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .dark .status-pending {
+            background-color: #422006;
+            color: #fbbf24;
+        }
+        
+        .dark .status-approved {
+            background-color: #052e16;
+            color: #4ade80;
+        }
+        
+        .dark .status-rejected {
+            background-color: #450a0a;
+            color: #f87171;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-primary-500 text-white p-3 rounded-lg">
+                            <i class="fa-solid fa-comments fa-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold">Concertation Publique</h1>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Plateforme de participation citoyenne</p>
+                        </div>
+                    </div>
+                    <button id="theme-toggle" class="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:block"></i>
+                    </button>
+                </div>
+                
+                <nav class="mt-4 md:mt-0">
+                    <ul class="flex space-x-6">
+                        <li><a href="#" class="font-medium hover:text-primary-600 dark:hover:text-primary-400">Accueil</a></li>
+                        <li><a href="#participer" class="font-medium hover:text-primary-600 dark:hover:text-primary-400">Participer</a></li>
+                        <li><a href="#contributions" class="font-medium hover:text-primary-600 dark:hover:text-primary-400">Contributions</a></li>
+                        <li class="hidden md:block">
+                            <button id="theme-toggle-desktop" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                                <i class="fa-solid fa-moon dark:hidden"></i>
+                                <i class="fa-solid fa-sun hidden dark:block"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-primary-500 to-primary-700 text-white">
+        <div class="container mx-auto px-4 py-16">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Votre avis compte !</h2>
+                <p class="text-lg mb-8 opacity-90">Participez à la consultation publique sur l'aménagement du territoire et contribuez à façonner notre avenir commun.</p>
+                <a href="#participer" class="inline-block bg-white text-primary-600 font-medium px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition-colors">Proposer une contribution</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Participation Form -->
+    <section id="participer" class="py-12 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden">
+                <div class="p-6 border-b border-gray-200 dark:border-gray-600">
+                    <h2 class="text-2xl font-bold">Proposer une contribution</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-2">Partagez votre question ou votre proposition avec nous</p>
+                </div>
+                
+                <form id="contribution-form" class="p-6">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-2" for="contribution-type">Type de participation</label>
+                        <div class="flex space-x-4">
+                            <button type="button" data-type="question" class="contribution-type-btn flex-1 py-3 px-4 bg-gray-100 dark:bg-gray-600 rounded-lg text-center font-medium hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors">
+                                <i class="fa-solid fa-question-circle mr-2"></i>Question
+                            </button>
+                            <button type="button" data-type="contribution" class="contribution-type-btn flex-1 py-3 px-4 bg-gray-100 dark:bg-gray-600 rounded-lg text-center font-medium hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors">
+                                <i class="fa-solid fa-lightbulb mr-2"></i>Contribution
+                            </button>
+                        </div>
+                        <input type="hidden" id="contribution-type" name="type" value="question">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="name">Nom (optionnel)</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" for="email">Email (optionnel)</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-2" for="title">Titre</label>
+                        <input type="text" id="title" name="title" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-2" for="content">Contenu</label>
+                        <textarea id="content" name="content" rows="4" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-transparent"></textarea>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-2" for="file">Joindre un document (PDF uniquement, max 5MB)</label>
+                        <input type="file" id="file" name="file" accept=".pdf" class="file-input w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600">
+                    </div>
+                    
+                    <div class="flex items-center mb-6">
+                        <input type="checkbox" id="consent" name="consent" required class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
+                        <label for="consent" class="ml-2 text-sm">J'accepte que ma contribution soit publiée sur cette plateforme après modération</label>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-4 rounded-lg shadow transition-colors">
+                        Envoyer ma contribution
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contributions Section -->
+    <section id="contributions" class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Contributions Publiques</h2>
+                <p class="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">Découvrez les questions et propositions partagées par les participants et les réponses de l'administration</p>
+            </div>
+            
+            <!-- Filters -->
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <button data-filter="all" class="filter-btn px-4 py-2 bg-primary-600 text-white rounded-lg font-medium">Toutes</button>
+                <button data-filter="question" class="filter-btn px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fa-solid fa-question-circle mr-2"></i>Questions
+                </button>
+                <button data-filter="contribution" class="filter-btn px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fa-solid fa-lightbulb mr-2"></i>Contributions
+                </button>
+            </div>
+            
+            <!-- Contributions List -->
+            <div id="contributions-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Contribution cards will be dynamically added here -->
+            </div>
+            
+            <!-- Pagination -->
+            <div class="mt-12 flex justify-center">
+                <nav class="flex space-x-2">
+                    <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600">&laquo;</button>
+                    <button class="px-4 py-2 bg-primary-600 text-white rounded-lg font-medium">1</button>
+                    <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600">2</button>
+                    <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600">3</button>
+                    <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600">&raquo;</button>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Concertation Publique</h3>
+                    <p class="text-gray-400">Plateforme de participation citoyenne pour un aménagement durable du territoire.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Liens Utiles</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Projet d'aménagement</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Calendrier des réunions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Documents officiels</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Contact</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-400"><i class="fa-solid fa-envelope mr-2"></i> contact@concertation.fr</li>
+                        <li class="flex items-center text-gray-400"><i class="fa-solid fa-phone mr-2"></i> 01 23 45 67 89</li>
+                        <li class="flex items-center text-gray-400"><i class="fa-solid fa-location-dot mr-2"></i> Mairie, Place de la République</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Suivez-nous</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa-brands fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa-brands fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa-brands fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa-brands fa-linkedin fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-gray-700 text-center text-gray-400">
+                <p>&copy; 2023 Concertation Publique. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-8 max-w-md w-full mx-4">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fa-solid fa-check text-green-600 dark:text-green-400 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">Merci pour votre contribution !</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-6">Votre participation a bien été enregistrée. Elle sera publiée après modération par nos équipes.</p>
+                <button id="close-modal" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleDesktop = document.getElementById('theme-toggle-desktop');
+        
+        const toggleTheme = () => {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                html.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        };
+        
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggleDesktop.addEventListener('click', toggleTheme);
+        
+        // Set initial theme
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        
+        // Contribution Type Selection
+        const typeButtons = document.querySelectorAll('.contribution-type-btn');
+        const typeInput = document.getElementById('contribution-type');
+        
+        typeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                typeButtons.forEach(btn => {
+                    btn.classList.remove('bg-primary-500', 'text-white');
+                    btn.classList.add('bg-gray-100', 'dark:bg-gray-600');
+                });
+                
+                button.classList.remove('bg-gray-100', 'dark:bg-gray-600');
+                button.classList.add('bg-primary-500', 'text-white');
+                typeInput.value = button.dataset.type;
+            });
+        });
+        
+        // Sample contributions data
+        const contributions = [
+            {
+                id: 1,
+                type: 'question',
+                title: 'Quel sera l\'impact sur la circulation ?',
+                content: 'Je souhaite savoir comment le projet va affecter la circulation dans le centre-ville, notamment aux heures de pointe.',
+                author: 'Jean D.',
+                date: '15/10/2023',
+                status: 'approved',
+                file: null,
+                response: 'Le projet prévoit la création de nouvelles voies de circulation et l\'élargissement des routes principales pour fluidifier le trafic aux heures de pointe.'
+            },
+            {
+                id: 2,
+                type: 'contribution',
+                title: 'Proposition de parc urbain',
+                content: 'Je propose la création d\'un parc urbain dans le quartier nord avec des aires de jeux et des espaces verts.',
+                author: 'Marie L.',
+                date: '12/10/2023',
+                status: 'approved',
+                file: 'parc_urbain_proposition.pdf',
+                response: 'Votre proposition a été retenue et intégrée au plan d\'aménagement. Nous prévoyons de commencer les travaux au printemps prochain.'
+            },
+            {
+                id: 3,
+                type: 'question',
+                title: 'Quand seront publiés les résultats ?',
+                content: 'À quelle date prévoyez-vous de publier les résultats définitifs de cette concertation ?',
+                author: 'Pierre M.',
+                date: '10/10/2023',
+                status: 'approved',
+                file: null,
+                response: 'Les résultats complets seront publiés sur cette plateforme le 30 novembre 2023.'
+            },
+            {
+                id: 4,
+                type: 'contribution',
+                title: 'Idée pour le réaménagement de la place centrale',
+                content: 'Je suggère d\'ajouter plus d\'espaces verts et de bancs sur la place centrale pour en faire un lieu de rencontre agréable.',
+                author: 'Sophie R.',
+                date: '08/10/2023',
+                status: 'pending',
+                file: 'place_centrale_idee.pdf',
+                response: null
+            },
+            {
+                id: 5,
+                type: 'question',
+                title: 'Budget alloué au projet',
+                content: 'Quel est le budget total alloué à ce projet d\'aménagement et quelle part est consacrée aux espaces verts ?',
+                author: 'Thomas B.',
+                date: '05/10/2023',
+                status: 'approved',
+                file: null,
+                response: 'Le budget total est de 5 millions d\'euros, dont 1,2 million est consacré au développement des espaces verts.'
+            },
+            {
+                id: 6,
+                type: 'contribution',
+                title: 'Proposition de piste cyclable sécurisée',
+                content: 'Je propose la création d\'une piste cyclable séparée de la route sur l\'avenue principale pour la sécurité des cyclistes.',
+                author: 'Luc D.',
+                date: '02/10/2023',
+                status: 'rejected',
+                file: 'piste_cyclable_proposition.pdf',
+                response: 'Bien que votre idée soit intéressante, elle ne correspond pas aux normes actuelles de sécurité routière que nous devons respecter.'
+            }
+        ];
+        
+        // Render contributions
+        function renderContributions(filter = 'all') {
+            const container = document.getElementById('contributions-list');
+            container.innerHTML = '';
+            
+            const filteredContributions = filter === 'all' 
+                ? contributions 
+                : contributions.filter(c => c.type === filter);
+            
+            filteredContributions.forEach(contribution => {
+                const card = document.createElement('div');
+                card.className = `card contribution-card fade-in bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden ${contribution.type === 'question' ? 'question-card' : ''}`;
+                
+                let statusBadge = '';
+                if (contribution.status === 'pending') {
+                    statusBadge = '<span class="status-badge status-pending">En attente</span>';
+                } else if (contribution.status === 'approved') {
+                    statusBadge = '<span class="status-badge status-approved">Publié</span>';
+                } else if (contribution.status === 'rejected') {
+                    statusBadge = '<span class="status-badge status-rejected">Rejeté</span>';
+                }
+                
+                let fileBadge = '';
+                if (contribution.file) {
+                    fileBadge = `
+                        <div class="mt-4 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                            <i class="fa-solid fa-file-pdf mr-2 text-red-500"></i>
+                            <a href="#" class="hover:text-primary-600 dark:hover:text-primary-400">${contribution.file}</a>
+                        </div>
+                    `;
+                }
+                
+                let responseSection = '';
+                if (contribution.response) {
+                    responseSection = `
+                        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                            <div class="flex items-start">
+                                <div class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 p-2 rounded-full mr-3">
+                                    <i class="fa-solid fa-reply"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Réponse de l'administration</p>
+                                    <p class="text-gray-600 dark:text-gray-300 mt-1">${contribution.response}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                card.innerHTML = `
+                    <div class="p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full ${contribution.type === 'question' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'}">
+                                    ${contribution.type === 'question' ? 'Question' : 'Contribution'}
+                                </span>
+                                ${statusBadge}
+                            </div>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">${contribution.date}</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold mt-4">${contribution.title}</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mt-2">${contribution.content}</p>
+                        
+                        ${fileBadge}
+                        
+                        <div class="mt-4 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                            <i class="fa-solid fa-user mr-2"></i>
+                            ${contribution.author}
+                        </div>
+                        
+                        ${responseSection}
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Initial render
+        renderContributions();
+        
+        // Filter contributions
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => {
+                    if (btn.dataset.filter === 'all') {
+                        btn.classList.toggle('bg-primary-600', btn === button);
+                        btn.classList.toggle('text-white', btn === button);
+                        btn.classList.toggle('bg-gray-200', btn !== button);
+                        btn.classList.toggle('dark:bg-gray-700', btn !== button);
+                    } else {
+                        btn.classList.toggle('bg-primary-600', btn === button);
+                        btn.classList.toggle('text-white', btn === button);
+                        btn.classList.toggle('bg-gray-200', btn !== button && !btn.classList.contains('bg-primary-600'));
+                        btn.classList.toggle('dark:bg-gray-700', btn !== button && !btn.classList.contains('bg-primary-600'));
+                    }
+                });
+                
+                renderContributions(button.dataset.filter);
+            });
+        });
+        
+        // Form submission
+        const form = document.getElementById('contribution-form');
+        const successModal = document.getElementById('success-modal');
+        const closeModal = document.getElementById('close-modal');
+        
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // In a real application, this would send data to a server
+            // For this demo, we'll just show the success modal
+            
+            // Reset form
+            form.reset();
+            typeButtons.forEach(btn => {
+                btn.classList.remove('bg-primary-500', 'text-white');
+                btn.classList.add('bg-gray-100', 'dark:bg-gray-600');
+            });
+            typeButtons[0].classList.remove('bg-gray-100', 'dark:bg-gray-600');
+            typeButtons[0].classList.add('bg-primary-500', 'text-white');
+            typeInput.value = 'question';
+            
+            // Show success modal
+            successModal.classList.remove('hidden');
+        });
+        
+        closeModal.addEventListener('click', () => {
+            successModal.classList.add('hidden');
+        });
+        
+        // Close modal when clicking outside
+        successModal.addEventListener('click', (e) => {
+            if (e.target === successModal) {
+                successModal.classList.add('hidden');
+            }
+        });
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=StephaneG78/concertation-test-2-deepsite" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>
